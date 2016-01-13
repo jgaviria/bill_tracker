@@ -95,6 +95,7 @@ class ItemsController < ApplicationController
     @chart1 = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({:defaultSeriesType => "pie", :margin => [60, 50, 50, 50]})
       series = {
+        :size => '100%',
         :type => 'pie',
         :name => 'Browser share',
         :data => [
@@ -124,7 +125,7 @@ class ItemsController < ApplicationController
     end
 
     @chart2 = LazyHighCharts::HighChart.new('pie') do |f|
-      f.chart({:defaultSeriesType => "pie", :margin => [70, 60, 60, 50]})
+      f.chart({:defaultSeriesType => "pie"})
       series = {
         :type => 'pie',
         :name => 'Browser share',
