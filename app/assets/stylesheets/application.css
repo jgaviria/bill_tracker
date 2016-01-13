@@ -68,3 +68,26 @@ h4 {
     padding: 0;
 }
 
+.focus {
+    padding-top: 100px;
+}
+
+.focus-2 {
+    position:absolute;
+    width:50px;
+    height:80px;
+    z-index:15;
+    top:30%;
+    left:50%;
+    margin:-50px 0 0 -300px;
+}
+
+.focus-3 {
+    position:absolute;
+    width:50px;
+    height:80px;
+    z-index:15;
+    top:30%;
+    left:50%;
+    margin:-50px 0 0 -200px;
+}

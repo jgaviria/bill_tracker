@@ -33,7 +33,7 @@ class BillsController < ApplicationController
     respond_to do |format|
       if @bill.save
         format.html { redirect_to new_item_path, notice: 'Bill was successfully created.' }
-        format.json { render :show, status: :created, location: @bill }
+        format.js   { redirect_to bills_path,  notice: 'Item was successfully Created.' }
       else
         format.html { render :new }
         format.json { render json: @bill.errors, status: :unprocessable_entity }

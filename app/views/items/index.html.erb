@@ -27,7 +27,7 @@
                     :i,
                     nil,
                     class: 'fa fa-pencil fa-lg'
-            ),      edit_item_path(item) %>
+            ),      edit_item_path(item), remote: true  %>
 
             <%= link_to content_tag(
                     :i,
@@ -46,14 +46,16 @@
     <% end %>
     </tbody>
   </table>
-  <div id="myModal">
-  </div>
 
   <%= link_to content_tag(
           :i,
           nil,
           class: 'fa fa-plus-square fa-4x'
   ), new_item_path, remote: true %>
+
+  <div class="focus" id="myModal">
+
+  </div>
 
 </div>
 
@@ -65,8 +67,9 @@
 
 <script>
 $(document).ready(function(){
-if($('#alert-success')){
+    $(this).find("#myModal").focus()
 
-}
 });
+
+
 </script>

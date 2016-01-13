@@ -42,21 +42,35 @@
   </tbody>
 </table>
 
-  <%= link_to content_tag(
-          :i,
-          nil,
-          class: 'fa fa-plus-square fa-4x'
-  ), new_bill_path %>
+  <% if @bills %>
+      <%= link_to content_tag(
+              :i,
+              nil,
+              class: 'fa fa-plus-square fa-4x'
+      ), new_bill_path, remote: true %>
+  <% else %>
+      <div id="whatever" class="hidden">
+      <%= link_to content_tag(
+              :i,
+              nil,
+              class: 'fa fa-plus-square fa-4x'
+      ), new_bill_path, remote: true %>
+      </div>
+  <% end %>
+
+  <div class="focus-2" id="myModal">
+  </div>
 
 </div>
 
 <div class="bill-table-size">
-
 <div>
   <h3>Unpaid bills</h3>
   <ul>
+    <% unless @unpaid_items.nil? %>
     <% @unpaid_items.each do |bill| %>
     <li><%= bill.item_name %></li>
+     <% end %>
     <% end %>
   </ul>
 </div>
