@@ -15,6 +15,9 @@ class BillsController < ApplicationController
   def show
   end
 
+  def hey
+  end
+
   # GET /bills/new
   def new
     @bill = Bill.new
