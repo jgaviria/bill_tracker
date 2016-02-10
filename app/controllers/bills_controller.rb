@@ -41,6 +41,13 @@ class BillsController < ApplicationController
     end
   end
 
+
+  def vajairo
+
+  end
+
+
+
   # PATCH/PUT /bills/1
   # PATCH/PUT /bills/1.json
   def update
