@@ -19,5 +19,5 @@ production:
   encoding: unicode
   database: bill_tracker_production
   pool: 5
-  username: jgaviria
+  username: deploy
   password:
