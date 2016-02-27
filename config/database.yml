@@ -13,3 +13,11 @@ test:
   pool: 5
   username: jgaviria
   password:
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: bill_tracker_production
+  pool: 5
+  username: jgaviria
+  password:
