@@ -5,11 +5,12 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
+    @current_bill = Bill.find(self.params[:current_bill][:bill_id])
     if current_user.bills.first.nil?
       redirect_to bills_path
     else
 
-      @items = current_user.bills.first.items
+      @items = Bill.find(@current_bill).items
       charts
     end
   end
@@ -74,21 +75,21 @@ class ItemsController < ApplicationController
   end
 
   def charts
-    @income = current_user.bills.first.income
+    @income = @current_bill.income
     sum     = 0
-    current_user.bills.first.items.each { |a| sum+=a.paid }
+    @current_bill.items.each { |a| sum+=a.paid }
     @paid = sum
     @left = @income - @paid
 
-    credits = current_user.bills.first.items.where(item_type: 'credit')
+    credits = @current_bill.items.where(item_type: 'credit')
     @credit = 0
     credits.each { |a| @credit+=a.paid }
 
-    home_bills = current_user.bills.first.items.where(item_type: 'home')
+    home_bills = @current_bill.items.where(item_type: 'home')
     @home      = 0
     home_bills.each { |a| @home+=a.paid }
 
-    others = current_user.bills.first.items.where(item_type: 'other')
+    others = @current_bill.items.where(item_type: 'other')
     @other = 0
     others.each { |a| @other+=a.paid }
 

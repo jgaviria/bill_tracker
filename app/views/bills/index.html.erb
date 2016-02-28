@@ -11,7 +11,7 @@
   <tbody>
     <% @bills.each do |bill| %>
       <tr>
-        <td><%= link_to bill.name, items_path(bill) %></td>
+        <td><%= link_to bill.name, items_path(bill, :current_bill => { :bill_id => bill.id }) %></td>
         <td>
           <%= link_to content_tag(
                   :i,

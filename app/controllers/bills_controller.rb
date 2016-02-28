@@ -4,6 +4,7 @@ class BillsController < ApplicationController
   # GET /bills
   # GET /bills.json
   def index
+
     @bills = current_user.bills
     if current_user.bills.count > 0
     @unpaid_items = current_user.bills.first.items.where(paid: 0)
