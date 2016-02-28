@@ -1,77 +1,81 @@
 <%- model_class = Bill -%>
 <div class="bill-table-size">
   <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th><%= model_class.human_attribute_name(:id) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bills.each do |bill| %>
+          <tr>
+            <td><%= link_to bill.name, items_path(bill, :current_bill => { :bill_id => bill.id }) %></td>
+            <td>
+              <%= link_to content_tag(
+                      :i,
+                      nil,
+                      class: 'fa fa-pencil fa-lg'
+              ),      edit_bill_path(bill) %>
 
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @bills.each do |bill| %>
-      <tr>
-        <td><%= link_to bill.name, items_path(bill, :current_bill => { :bill_id => bill.id }) %></td>
-        <td>
-          <%= link_to content_tag(
-                  :i,
-                  nil,
-                  class: 'fa fa-pencil fa-lg'
-          ),      edit_bill_path(bill) %>
+              <%= link_to content_tag(
+                      :i,
+                      nil,
+                      class: 'fa fa-trash-o fa-lg'
+              ),      bill_path(bill),
+                      :method => :delete,
+                      :data   => {:confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))} %>
+            </td>
 
-          <%= link_to content_tag(
-                  :i,
-                  nil,
-                  class: 'fa fa-trash-o fa-lg'
-          ),      bill_path(bill),
-                  :method => :delete,
-                  :data   => {:confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?'))} %>
-        </td>
+            <td>
+            <% if @unpaid_items.present? %>
+                <td><i class="fa fa-times fa-2x"></i></td>
+            <% else %>
+                <td><i class="fa fa fa-check fa-2x"></i></td>
+            <% end %>
+            </td>
 
-        <td>
-          <% if @unpaid_items.present? %>
-            <td><i class="fa fa-times fa-2x"></i></td>
-        <% else %>
-            <td><i class="fa fa fa-check fa-2x"></i></td>
         <% end %>
-        </td>
+      </tr>
+      </tbody>
+    </table>
 
-    <% end %>
-  </tr>
+          <% if @bills %>
+              <%= link_to content_tag(
+                      :i,
+                      nil,
+                      class: 'fa fa-plus-square fa-4x'
+              ), new_bill_path, remote: true %>
+          <% else %>
+              <div id="whatever" class="hidden">
+              <%= link_to content_tag(
+                      :i,
+                      nil,
+                      class: 'fa fa-plus-square fa-4x'
+              ), new_bill_path, remote: true %>
+              </div>
+          <% end %>
 
-  </tbody>
-</table>
-
-  <% if @bills %>
-      <%= link_to content_tag(
-              :i,
-              nil,
-              class: 'fa fa-plus-square fa-4x'
-      ), new_bill_path, remote: true %>
-  <% else %>
-      <div id="whatever" class="hidden">
-      <%= link_to content_tag(
-              :i,
-              nil,
-              class: 'fa fa-plus-square fa-4x'
-      ), new_bill_path, remote: true %>
+      <div class="focus-2" id="myModal">
       </div>
-  <% end %>
 
-  <div class="focus-2" id="myModal">
+  <div class="unpaid-bills">
+    <div>
+      <h3>Unpaid bills</h3>
+      <ul>
+        <% unless @unpaid_items.nil? %>
+            <% @unpaid_items.each do |bill| %>
+                <li><%= bill.item_name %></li>
+            <% end %>
+        <% end %>
+      </ul>
+    </div>
   </div>
 
 </div>
 
-<div class="bill-table-size">
-<div>
-  <h3>Unpaid bills</h3>
-  <ul>
-    <% unless @unpaid_items.nil? %>
-    <% @unpaid_items.each do |bill| %>
-    <li><%= bill.item_name %></li>
-     <% end %>
-    <% end %>
-  </ul>
+
+<div class="charts-right">
+  <%= render partial: 'results' %>
 </div>
-</div>
+

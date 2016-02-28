@@ -1,35 +1,33 @@
 class BillsController < ApplicationController
   before_action :set_bill, only: [:show, :edit, :update, :destroy]
 
-  # GET /bills
-  # GET /bills.json
+
   def index
+    min_id_for_user = current_user.bills.minimum(:id)
+    @current_bill = Bill.find(min_id_for_user)
 
     @bills = current_user.bills
     if current_user.bills.count > 0
     @unpaid_items = current_user.bills.first.items.where(paid: 0)
     end
+
+    charts
   end
 
-  # GET /bills/1
-  # GET /bills/1.json
+
   def show
   end
 
-  def hey
-  end
 
-  # GET /bills/new
   def new
     @bill = Bill.new
   end
 
-  # GET /bills/1/edit
+
   def edit
   end
 
-  # POST /bills
-  # POST /bills.json
+
   def create
     @bill = Bill.new(bill_params)
     #this_user = User.find(params[:user_id])
@@ -45,8 +43,7 @@ class BillsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /bills/1
-  # PATCH/PUT /bills/1.json
+
   def update
     respond_to do |format|
       if @bill.update(bill_params)
@@ -59,8 +56,7 @@ class BillsController < ApplicationController
     end
   end
 
-  # DELETE /bills/1
-  # DELETE /bills/1.json
+
   def destroy
     @bill.destroy
     respond_to do |format|
@@ -68,6 +64,91 @@ class BillsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+
+  def charts
+    @income = @current_bill.income
+    sum     = 0
+    @current_bill.items.each { |a| sum+=a.paid }
+    @paid = sum
+    @left = @income - @paid
+
+    credits = @current_bill.items.where(item_type: 'credit')
+    @credit = 0
+    credits.each { |a| @credit+=a.paid }
+
+    home_bills = @current_bill.items.where(item_type: 'home')
+    @home      = 0
+    home_bills.each { |a| @home+=a.paid }
+
+    others = @current_bill.items.where(item_type: 'other')
+    @other = 0
+    others.each { |a| @other+=a.paid }
+
+    @chart1 = LazyHighCharts::HighChart.new('pie') do |f|
+      f.chart({:defaultSeriesType => "pie", :margin => [60, 50, 50, 50]})
+      series = {
+        :size => '100%',
+        :type => 'pie',
+        :name => 'Browser share',
+        :data => [
+          ['income', @income],
+          [' total paid', @paid],
+          {
+            :name => 'total left',
+            :y    => @left,
+
+          },
+        ]
+      }
+      f.series(series)
+      f.options[:title][:text] = "Metrics"
+      f.legend(:layout => 'vertical', :style => {:left => 'auto', :bottom => 'auto', :right => '50px', :top => '50px'})
+      f.plot_options(:pie => {
+        :allowPointSelect => true,
+        :cursor           => "pointer",
+        :dataLabels       => {
+          :enabled => true,
+          :color   => "black",
+          :style   => {
+            :font => "13px Trebuchet MS, Verdana, sans-serif"
+          }
+        }
+      })
+    end
+
+    @chart2 = LazyHighCharts::HighChart.new('pie') do |f|
+      f.chart({:defaultSeriesType => "pie"})
+      series = {
+        :type => 'pie',
+        :name => 'Browser share',
+        :data => [
+          ['total credit', @credit],
+          ['total home', @home],
+          {
+            :name => 'total other',
+            :y    => @other,
+
+          },
+        ]
+      }
+      f.series(series)
+      f.options[:title][:text] = "Totals"
+      f.legend(:layout => 'vertical', :style => {:left => 'auto', :bottom => 'auto', :right => '50px', :top => '50px'})
+      f.plot_options(:pie => {
+        :allowPointSelect => true,
+        :cursor           => "pointer",
+        :dataLabels       => {
+          :enabled => true,
+          :color   => "black",
+          :style   => {
+            :font => "13px Trebuchet MS, Verdana, sans-serif"
+          }
+        }
+      })
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
