@@ -35,8 +35,8 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to bills_path, notice: 'Item was successfully destroyed.' }
-        format.js   { redirect_to bills_path,  notice: 'Item was successfully Created.' }
+        format.html { redirect_to items_path, notice: 'Item was successfully destroyed.' }
+        format.js   { redirect_to items_path,  notice: 'Item was successfully Created.' }
       else
         format.html { render :new }
         format.json { render json: @item.errors, status: :unprocessable_entity }
@@ -48,12 +48,12 @@ class ItemsController < ApplicationController
   # PATCH/PUT /items/1
   # PATCH/PUT /items/1.json
   def update
-    @item.sub_total = (@item.amount.to_i - @item.paid.to_i)
-
     respond_to do |format|
       if @item.update(item_params)
-        format.html { redirect_to @item, notice: 'Item was successfully updated.' }
+        format.html { redirect_to items_path, notice: 'Item was successfully updated.' }
+        format.js   { redirect_to items_path,  notice: 'Item was successfully Created.' }
         format.json { render :show, status: :ok, location: @item }
+        @item.sub_total = (@item.amount.to_i - @item.paid.to_i)
       else
         format.html { render :edit }
         format.json { render json: @item.errors, status: :unprocessable_entity }
@@ -91,5 +91,9 @@ class ItemsController < ApplicationController
       min_id_for_user = current_user.bills.where.not(archive: true).minimum(:id)
       @current_bill = Bill.find(min_id_for_user)
     end
+  end
+
+  def update_charts
+
   end
 end
