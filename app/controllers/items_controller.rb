@@ -5,7 +5,6 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
-
     if current_user.bills.first.nil?
       redirect_to bills_path
     else
@@ -36,7 +35,7 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to bills_url, notice: 'Item was successfully destroyed.' }
+        format.html { redirect_to bills_path, notice: 'Item was successfully destroyed.' }
         format.js   { redirect_to bills_path,  notice: 'Item was successfully Created.' }
       else
         format.html { render :new }

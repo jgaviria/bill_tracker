@@ -1,4 +1,4 @@
-<%= form_for @item, remote: true, :html => { :class => "form-horizontal item" } do |f| %>
+<%= form_for @item, :html => { :class => "form-horizontal item" } do |f| %>
 
     <% if @item.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
