@@ -9,7 +9,7 @@ class ItemsController < ApplicationController
     if current_user.bills.first.nil?
       redirect_to bills_path
     else
-      @items = Bill.find(@current_bill).items
+       @items = Bill.find(@current_bill.id).items
     end
   end
 
@@ -36,8 +36,8 @@ class ItemsController < ApplicationController
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to items_url, notice: 'Item was successfully destroyed.' }
-        format.js   { redirect_to items_path,  notice: 'Item was successfully Created.' }
+        format.html { redirect_to bills_url, notice: 'Item was successfully destroyed.' }
+        format.js   { redirect_to bills_path,  notice: 'Item was successfully Created.' }
       else
         format.html { render :new }
         format.json { render json: @item.errors, status: :unprocessable_entity }
@@ -85,7 +85,12 @@ class ItemsController < ApplicationController
   end
 
   def get_current_bill
-   bill = self.params[:current_bill][:bill_id]
-   @current_bill = Bill.find(bill)
+    if self.params[:current_bill].present?
+     bill = self.params[:current_bill][:bill_id]
+     @current_bill = Bill.find(bill)
+    else
+      min_id_for_user = current_user.bills.where.not(archive: true).minimum(:id)
+      @current_bill = Bill.find(min_id_for_user)
+    end
   end
 end
