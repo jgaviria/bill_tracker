@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Bill name:</strong>
+  <%= @archived_bill.bill_name %>
+</p>
+
+<p>
+  <strong>Item name:</strong>
+  <%= @archived_bill.item_name %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @archived_bill.amount %>
+</p>
+
+<p>
+  <strong>Paid:</strong>
+  <%= @archived_bill.paid %>
+</p>
+
+<p>
+  <strong>Sub total:</strong>
+  <%= @archived_bill.sub_total %>
+</p>
+
+<p>
+  <strong>Item type:</strong>
+  <%= @archived_bill.item_type %>
+</p>
+
+<%= link_to 'Edit', edit_archived_bill_path(@archived_bill) %> |
+<%= link_to 'Back', archived_bills_path %>

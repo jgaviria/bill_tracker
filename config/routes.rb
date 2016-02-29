@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
+  resources :archived_bills
   resources :items
-  resources :bills
   devise_for :users
+
+  resources :bills do
+    collection do
+      get :index_archive
+    end
+  end
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

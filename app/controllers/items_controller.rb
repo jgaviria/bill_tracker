@@ -1,15 +1,14 @@
 class ItemsController < ApplicationController
   before_action :set_item, only: [:show, :edit, :update, :destroy]
-
+  before_action :get_current_bill, only: [:index, :create]
 
   # GET /items
   # GET /items.json
   def index
-    @current_bill = Bill.find(self.params[:current_bill][:bill_id])
+
     if current_user.bills.first.nil?
       redirect_to bills_path
     else
-
       @items = Bill.find(@current_bill).items
     end
   end
@@ -32,7 +31,7 @@ class ItemsController < ApplicationController
   # POST /items.json
   def create
     @item           = Item.new(item_params)
-    @item.bill_id   = current_user.bills.first.id
+    @item.bill_id   = @current_bill.id
     @item.sub_total = (@item.amount.to_i - @item.paid.to_i)
 
     respond_to do |format|
@@ -83,5 +82,10 @@ class ItemsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def item_params
     params.require(:item).permit(:item_name, :amount, :paid, :sub_total, :item_type)
+  end
+
+  def get_current_bill
+   bill = self.params[:current_bill][:bill_id]
+   @current_bill = Bill.find(bill)
   end
 end

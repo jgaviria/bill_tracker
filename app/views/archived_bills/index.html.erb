@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Archived Bills</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bill name</th>
+      <th>Item name</th>
+      <th>Amount</th>
+      <th>Paid</th>
+      <th>Sub total</th>
+      <th>Item type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @archived_bills.each do |archived_bill| %>
+      <tr>
+        <td><%= archived_bill.bill_name %></td>
+        <td><%= archived_bill.item_name %></td>
+        <td><%= archived_bill.amount %></td>
+        <td><%= archived_bill.paid %></td>
+        <td><%= archived_bill.sub_total %></td>
+        <td><%= archived_bill.item_type %></td>
+        <td><%= link_to 'Show', archived_bill %></td>
+        <td><%= link_to 'Edit', edit_archived_bill_path(archived_bill) %></td>
+        <td><%= link_to 'Destroy', archived_bill, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Archived bill', new_archived_bill_path %>

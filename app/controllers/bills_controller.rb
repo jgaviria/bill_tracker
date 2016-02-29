@@ -1,37 +1,39 @@
 class BillsController < ApplicationController
   before_action :set_bill, only: [:show, :edit, :update, :destroy]
-
+  before_action :get_current_bill, only: [:index, :create, :charts]
 
   def index
-    min_id_for_user = current_user.bills.minimum(:id)
-    @current_bill = Bill.find(min_id_for_user)
-
-    @bills = current_user.bills
+    @bills = current_user.bills.where.not(archive: true)
     if current_user.bills.count > 0
     @unpaid_items = current_user.bills.first.items.where(paid: 0)
     end
-
     charts
+  end
+
+  def index_archive
+    @bills = current_user.bills.where.not(archive: false)
   end
 
 
   def show
   end
 
-
   def new
     @bill = Bill.new
   end
 
-
   def edit
   end
 
-
   def create
+
+    if @current_bill
+      @current_bill.update_attributes(archive: true)
+    end
+
     @bill = Bill.new(bill_params)
-    #this_user = User.find(params[:user_id])
     @bill.user_id = current_user.id
+    @bill.archive = false
     respond_to do |format|
       if @bill.save
         format.html { redirect_to new_item_path, notice: 'Bill was successfully created.' }
@@ -67,6 +69,8 @@ class BillsController < ApplicationController
 
 
   def charts
+
+    if @current_bill
     @income = @current_bill.income
     sum     = 0
     @current_bill.items.each { |a| sum+=a.paid }
@@ -84,7 +88,7 @@ class BillsController < ApplicationController
     others = @current_bill.items.where(item_type: 'other')
     @other = 0
     others.each { |a| @other+=a.paid }
-
+   end
     @chart1 = LazyHighCharts::HighChart.new('pie') do |f|
       f.chart({:defaultSeriesType => "pie", :margin => [60, 50, 50, 50]})
       series = {
@@ -155,6 +159,11 @@ class BillsController < ApplicationController
     def set_bill
       @bill = Bill.find(params[:id])
     end
+
+  def get_current_bill
+    min_id_for_user = current_user.bills.where.not(archive: true).minimum(:id)
+    @current_bill = Bill.find(min_id_for_user) unless min_id_for_user.nil?
+  end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def bill_params
