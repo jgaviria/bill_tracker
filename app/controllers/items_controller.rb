@@ -48,12 +48,14 @@ class ItemsController < ApplicationController
   # PATCH/PUT /items/1
   # PATCH/PUT /items/1.json
   def update
+    sub = item_params[:amount].to_i - item_params[:paid].to_i
+    items = item_params.merge({:sub_total => sub})
+    puts items
     respond_to do |format|
-      if @item.update(item_params)
+      if @item.update(items)
         format.html { redirect_to items_path, notice: 'Item was successfully updated.' }
         format.js   { redirect_to items_path,  notice: 'Item was successfully Created.' }
         format.json { render :show, status: :ok, location: @item }
-        @item.sub_total = (@item.amount.to_i - @item.paid.to_i)
       else
         format.html { render :edit }
         format.json { render json: @item.errors, status: :unprocessable_entity }
